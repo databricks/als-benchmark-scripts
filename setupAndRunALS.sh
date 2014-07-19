@@ -9,11 +9,11 @@ let CORES=$NODES*$CPUS_PER_NODE
 export ALL_SCALE=( 2 4 16 32 64 )
 
 export DIR=$PWD
-#Setup Graphlab script. Sets up Graphlab on a Spark EC2 cluster. Comment this line out if you already have
-#graphlab or are running the experiment on a local machine. Please adjust the GRAPHLAB variable to the directory
-#of graphlab if you are skipping this step.
+#Setup Powergraph script. Sets up Powergraph on a Spark EC2 cluster. Comment this line out if you already have
+#Powergraph or are running the experiment on a local machine. Please adjust the Powergraph variable to the directory
+#of Powergraph if you are skipping this step.
 
-bash graphlab-setup.sh
+bash powergraph-setup.sh
 
 #Setup Mahout
 bash mahout-setup.sh
@@ -33,7 +33,7 @@ sleep 3
 ~/ephemeral-hdfs/bin/hadoop dfsadmin -safemode leave
 
 export SPARK=~/spark
-export GRAPHLAB=/mnt/graphlab/release/toolkits/collaborative_filtering
+export POWERGRAPH=/mnt/powergraph/release/toolkits/collaborative_filtering
 export MAHOUT=/mnt/mahout
 
 
@@ -66,7 +66,7 @@ cd ~
 mkdir testFilesALS
 cd testFilesALS
 mkdir spark
-mkdir graphlab
+mkdir powergraph
 mkdir mahout
 
 cd $DIR
@@ -124,11 +124,11 @@ fi
 #Stop Spark memory consumption
 /root/spark/sbin/stop-all.sh
 
-##Run ALS on Graphlab
+##Run ALS on Powergraph
 
 if [ $exit = 0 ]; then
 
-  cd ~/testFilesALS/graphlab
+  cd ~/testFilesALS/powergraph
 
  
   for RANK in ${ALL_RANK[@]}
@@ -136,7 +136,7 @@ if [ $exit = 0 ]; then
     let i=0
     while [ $i -lt $TRIALS ]
     do
-      mpiexec -n $NODES --hostfile /root/spark-ec2/slaves -x CLASSPATH -x GRAPHLAB -x SPARK_MASTER_IP $GRAPHLAB/als \
+      mpiexec -n $NODES --hostfile /root/spark-ec2/slaves -x CLASSPATH -x POWERGRAPH -x SPARK_MASTER_IP $POWERGRAPH/als \
         --ncpus $CPUS_PER_NODE --matrix $OUT_DIR/bm_train.train \
         --test $OUT_DIR/bm_test.validate \
         --max_iter $ITER --D $RANK --lambda $LAMBDA --tol 0.0000000001 \
@@ -145,7 +145,7 @@ if [ $exit = 0 ]; then
 
   ###or if you want to run locally
   #
-  #$GRAPHLAB/als --matrix $OUT_DIR/amatrain.train --test $OUT_DIR/amatest.validate \
+  #$POWERGRAPH/als --matrix $OUT_DIR/amatrain.train --test $OUT_DIR/amatest.validate \
   #--max_iter $ITER --D $RANK --lambda $LAMBDA --regnormal 0 --tol 0.0000000001 > \
   #s_$SCALE-c_$CORES-d_$RANK-l_$LAMBDA-t_$ITER-$i
   #
