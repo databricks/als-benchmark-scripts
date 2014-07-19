@@ -2,6 +2,14 @@
 
 #### Setup graphlab
 
+# Some options that were tried:
+#  - building with tcmalloc leads to seg fault 13 on Mac OS X, and build failure on EC2
+#  - input was split into disjoint parts to maximize GraphLab load speed (not required for Spark or Mahout)
+#  - disabling dynamic graph leads to build failure on EC2
+#  - maxval / minval was set according to
+#   http://bickson.blogspot.com/2013/03/intel-labs-report-on-graphlab-vs-mahout.html
+
+
 # install dependencies across cluster
 yum install -y openmpi-devel zlib-devel cmake
 ln -s /usr/lib64/openmpi/bin/* /usr/bin/.
